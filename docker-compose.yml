@@ -1,0 +1,69 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: tapco
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: larvel-login-app
+    container_name: grandbitex-api-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - laravel
+
+  db:
+    image: mysql
+    container_name: laravel-login-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - laravel-login-data:/var/lib/mysql
+    networks:
+      - laravel
+
+  nginx:
+    image: nginx:alpine
+    container_name: larvel-login-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    networks:
+      - laravel
+
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - .redis:/data
+    networks:
+      - laravel
+    healthcheck:
+      test: 
+        - CMD
+        - redis-cli
+        - ping
+      timeout: 5s
+      retries: 3
+
+
+networks:
+  laravel:
+    driver: bridge
+
+volumes:
+  laravel-login-data:
