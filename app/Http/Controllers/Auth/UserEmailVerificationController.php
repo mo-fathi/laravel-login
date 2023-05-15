@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserEmailVerification;
 
-class UserEmailValidationController extends Controller
+class UserEmailVerificationController extends Controller
 {
     public function sendEmailOTP(Request $request)
     {
@@ -23,7 +26,7 @@ class UserEmailValidationController extends Controller
         // check if not add
         
         // send email
-
+        Mail::to($validator['email'])->send(new UserEmailVerification($email_otp));
         // response
         return [
             'message' => 'otp was sent to your email',
