@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 // controllers
 use App\Http\Controllers\Auth\UserEmailVerificationController;
 use App\Http\Controllers\Auth\UserRegisterController;
+use App\Http\Controllers\Auth\UserLoginController;
 
 
 /*
@@ -29,3 +30,11 @@ Route::post('/register/email-otp', [UserEmailVerificationController::class,'send
 Route::post('/register/email-otp/validation', [UserEmailVerificationController::class,'validateEmailOTP']);
 // user registration
 Route::post('/register',[UserRegisterController::class,'register']);
+
+// login
+Route::post('/login',[UserLoginController::class,'login']);
+// logout
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('logout',[UserLoginController::class,'logout']);
+});
+

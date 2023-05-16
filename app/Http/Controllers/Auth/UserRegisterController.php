@@ -14,7 +14,7 @@ class UserRegisterController extends Controller
     public function register(Request $request)
     {
         // validation
-        $validator = $request->validate([
+        $validated = $request->validate([
             'email' => ['required','email','unique:users'],
             'name' => ['required'],
             'family' => ['required'],
@@ -28,16 +28,16 @@ class UserRegisterController extends Controller
             ->uncompromised()],
         ]);
 
-        $cached_otp = Cache::get($validator['email'], 'default');
+        $cached_otp = Cache::get($validated['email'], 'default');
         // check email and otp
-        if($cached_otp == $validator['otp']){
+        if($cached_otp == $validated['otp']){
 
             // create user with that email and verify.
             $new_user = User::create([
-                'email' => $validator['email'],
-                'name' => $validator['name'],
-                'family' => $validator['family'],
-                'password' => Hash::make($validator['password']),
+                'email' => $validated['email'],
+                'name' => $validated['name'],
+                'family' => $validated['family'],
+                'password' => Hash::make($validated['password']),
                 'email_verified_at' => now(),
             ]) ;
 
