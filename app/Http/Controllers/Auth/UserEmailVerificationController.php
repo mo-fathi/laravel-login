@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserEmailVerification;
+use App\Models\User;
 
 class UserEmailVerificationController extends Controller
 {
@@ -17,14 +18,14 @@ class UserEmailVerificationController extends Controller
             'email' => 'required|email'
         ]);
 
-        
+
         // make otp
         $email_otp = mt_rand(100000, 999999); // Generate a random OTP token
 
         // store otp
-        Cache::add($validator['email'], $email_otp, 120);
+        Cache::add($validator['email'], $email_otp, 5*60);
         // check if not add
-        
+
         // send email
         Mail::to($validator['email'])->send(new UserEmailVerification($email_otp));
         // response
@@ -35,7 +36,7 @@ class UserEmailVerificationController extends Controller
         ];
     }
 
-    public function validateEmail(Request $request)
+    public function validateEmailOTP(Request $request)
     {
         // validation
         $validator = $request->validate([
@@ -43,10 +44,17 @@ class UserEmailVerificationController extends Controller
             'otp' => 'required|min:6|max:6'
         ]);
 
-        // create new user
+        $cached_otp = Cache::get($validator['email'], 'default');
 
+        // email verified
+        if($cached_otp == $validator['otp']){
 
-        // response
+            return 'ok';
+
+        }
+
+        return 'not ok';
+
     }
-    
+
 }

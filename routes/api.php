@@ -3,8 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// controllers 
+// controllers
 use App\Http\Controllers\Auth\UserEmailVerificationController;
+use App\Http\Controllers\Auth\UserRegisterController;
 
 
 /*
@@ -23,5 +24,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // send otp
-Route::post('/email-otp', [UserEmailVerificationController::class,'sendEmailOTP']);
-Route::post('/email-validation', [UserEmailVerificationController::class,'validateEmail']);
+Route::post('/register/email-otp', [UserEmailVerificationController::class,'sendEmailOTP']);
+// otp validation
+Route::post('/register/email-otp/validation', [UserEmailVerificationController::class,'validateEmailOTP']);
+// user registration
+Route::post('/register',[UserRegisterController::class,'register']);
