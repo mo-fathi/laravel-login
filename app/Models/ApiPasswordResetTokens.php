@@ -8,4 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class ApiPasswordResetTokens extends Model
 {
     use HasFactory;
+
+    public $timestamps = false;
+    
+    protected $fillable = [
+        'email',
+        'token',
+        'expired_at'
+    ];
+
 }

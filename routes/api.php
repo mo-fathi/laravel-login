@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\UserEmailVerificationController;
 use App\Http\Controllers\Auth\UserRegisterController;
 use App\Http\Controllers\Auth\UserLoginController;
-
+use App\Http\Controllers\Auth\UserResetPassword;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,8 +33,11 @@ Route::post('/register',[UserRegisterController::class,'register']);
 
 // login
 Route::post('/login',[UserLoginController::class,'login']);
-// logout
+// reset pasword
+Route::post('/reset-password',[UserResetPassword::class,'resetPassword']);
+Route::post('/reset-password/email',[UserResetPassword::class,'sendResetPasswordEmail']);
 Route::middleware(['auth:sanctum'])->group(function () {
+    // logoutc
     Route::post('logout',[UserLoginController::class,'logout']);
 });
 
