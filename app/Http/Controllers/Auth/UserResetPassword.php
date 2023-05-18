@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\Rules\Password;
 
 class UserResetPassword extends Controller
 {
@@ -37,7 +37,7 @@ class UserResetPassword extends Controller
             return APIResponse::json('wrong otp',true);
         }
 
-        $user->password = Hash::make($request->password);
+        $user->password = Hash::make($request->new_password);
         $user->save();
 
         return APIResponse::json('your password changed');
@@ -51,7 +51,7 @@ class UserResetPassword extends Controller
         ]);
 
         $user = User::where('email',$request->email)->first();
-        
+
         if (! $user)
         {
             return APIResponse::json('please check your email inbox.');
