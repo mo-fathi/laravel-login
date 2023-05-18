@@ -1,0 +1,31 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('api_password_reset_tokens', function (Blueprint $table) {
+            $table->id();
+            $table->string('email');
+            $table->string('token');
+            $table->string('expired_at');
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('api_password_reset_tokens');
+    }
+};
