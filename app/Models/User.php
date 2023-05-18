@@ -50,8 +50,13 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
-    public function user(): HasMany
+    public function posts(): HasMany
     {
         return $this->hasMany(Post::class, 'author_id', 'id');
+    }
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class, 'owner_id', 'id');
     }
 }

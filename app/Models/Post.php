@@ -13,7 +13,8 @@ class Post extends Model
 
     protected $fillable = [
         'title',
-        'context'
+        'context',
+        'category_id'
     ];
 
 
