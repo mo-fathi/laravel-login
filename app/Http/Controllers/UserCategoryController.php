@@ -6,6 +6,8 @@ use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\CategoryResource;
 use App\Http\Responses\APIResponse;
 use App\Models\Category;
+use BadMethodCallException;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,12 +24,26 @@ class UserCategoryController extends Controller
         ]);
 
         $limit = $request->limit ? $request->limit : 10;
-        $category = Category::where('context','LIKE',"%$request->search%")
-                    ->paginate($limit);
+        if ($request->search){
+            $category = Category::where('description','LIKE',"%$request->search%")
+                        ->paginate($limit);
+        }
+        else{
+            $category = Category::paginate($request->query('per_page',$limit));
+        }
 
-        $category_collection =  CategoryCollection::collection($category);
+        try{
 
-        return APIResponse::json($data = $category_collection);
+            $category_collection =  CategoryCollection::collection($category);
+
+            return APIResponse::json($data = $category_collection);
+        }
+        catch(BadMethodCallException $exception)
+        {
+            $category_resource =  new CategoryResource($category);
+            return APIResponse::json($data = $category_resource);
+        }
+
     }
 
     /**
@@ -50,7 +66,7 @@ class UserCategoryController extends Controller
         $new_category_resource = new CategoryResource($new_category);
 
 
-        return APIResponse::json('post created',$new_category_resource);
+        return APIResponse::json('category created',$new_category_resource);
     }
 
     /**
@@ -82,7 +98,7 @@ class UserCategoryController extends Controller
 
         $updated_post_resorce = new CategoryResource($updated_category);
 
-        return APIResponse::json('The post updated susccessfuly');
+        return APIResponse::json('The category updated susccessfuly');
 
     }
 

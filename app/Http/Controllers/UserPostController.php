@@ -7,6 +7,7 @@ use App\Http\Resources\PostResource;
 use App\Http\Resources\UserPostResource;
 use App\Http\Responses\APIResponse;
 use App\Models\Post;
+use BadMethodCallException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,14 +23,26 @@ class UserPostController extends Controller
             'limit' => ['numeric', 'min:1'],
             'search' => ['string'],
         ]);
-
         $limit = $request->limit ? $request->limit : 10;
-        $posts = Post::where('context','LIKE',"%$request->search%")
-                    ->paginate($limit);
 
-        $post_collection =  PostCollection::collection($posts);
+        if ($request->search){
+            $posts = Post::where('context','LIKE',"%$request->search%")
+                        ->paginate($limit);
+        }
+        else
+        {
+            $posts = Post::paginate($request->query('per_page',$limit));
+        }
 
-        return APIResponse::json($data = $post_collection);
+        try{
+            $post_collection =  PostCollection::collection($posts);
+            return APIResponse::json($data = $post_collection);
+        }
+        catch(BadMethodCallException $exception)
+        {
+            $post_resource =  new PostCollection($posts);
+            return APIResponse::json($data = $post_resource);
+        }
     }
 
     /**
