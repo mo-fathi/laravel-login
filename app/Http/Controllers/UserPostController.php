@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PostCollection;
+use App\Http\Resources\PostResource;
 use App\Http\Resources\UserPostResource;
 use App\Http\Responses\APIResponse;
 use App\Models\Post;
@@ -10,22 +12,22 @@ use Illuminate\Support\Facades\Auth;
 
 class UserPostController extends Controller
 {
-    public $limit;
-
-    public function __construct(
-        Request $request
-    )
-    {
-    
-        $this->limit = ( $request->limit && $request->limit >= 1) ? $request->limit : 10;
-    }
 
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $post_collection =  UserPostResource::collection(Post::paginate($this->limit));
+        $request->validate([
+            'limit' => ['numeric', 'min:1'],
+            'search' => ['string'],
+        ]);
+
+        $limit = $request->limit ? $request->limit : 10;
+        $posts = Post::where('context','LIKE',"%$request->search%")
+                    ->paginate($limit);
+
+        $post_collection =  PostCollection::collection($posts);
 
         return APIResponse::json($data = $post_collection);
     }
@@ -38,20 +40,22 @@ class UserPostController extends Controller
         $request->validate([
             'title' => ['required','max:120'],
             'context' => ['required'],
-            'category_id' => ['required','numeric','min:1']
+            'category_id' => ['required','numeric','min:1','exists:categories,id']
         ]);
 
         $user = Auth::user();
-        
+
         $new_post =$user->posts()->create([
             'title' => $request->title,
             'context' => $request->context,
             'category_id' => $request->category_id
         ]);
 
+        $new_post_resource = new PostResource($new_post);
 
-        return APIResponse::json('post created',$new_post);
-        
+
+        return APIResponse::json('post created',$new_post_resource);
+
     }
 
     /**
@@ -59,7 +63,9 @@ class UserPostController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post_resource = new PostResource($post);
+        return APIResponse::json($data=$post_resource);
     }
 
     /**
@@ -67,7 +73,24 @@ class UserPostController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'title' => ['required','max:120'],
+            'context' => ['required'],
+            'category_id' => ['required','numeric','min:1','exists:categories,id']
+        ]);
+
+        $post = Post::findOrFail($id);
+
+        $updated_post =$post->update([
+            'title' => $request->title,
+            'context' => $request->context,
+            'category_id' => $request->category_id
+        ]);
+
+        $updated_post_resorce = new PostResource($updated_post);
+
+        return APIResponse::json('The post updated susccessfuly');
+
     }
 
     /**
@@ -75,6 +98,8 @@ class UserPostController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $post = Post::findOrFail($id);
+        $post->delete();
+        return APIResponse::json($message = 'The post deleted successfuly',$data=$post,$status=204);
     }
 }
