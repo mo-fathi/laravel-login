@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Responses\APIResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
@@ -49,11 +50,11 @@ class UserEmailVerificationController extends Controller
         // email verified
         if($cached_otp == $validated['otp']){
 
-            return 'ok';
+            return APIResponse::json('The email otp code valid');
 
         }
 
-        return 'not ok';
+        return  APIResponse::json('The email otp code valid is not valid');
 
     }
 
