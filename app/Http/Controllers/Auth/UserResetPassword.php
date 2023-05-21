@@ -64,12 +64,6 @@ class UserResetPassword extends Controller
             'token' => mt_rand(100000 , 999999),
             'expired_at' => now()->addMinutes(2),
         ]);
-        // $reset_password = new ApiPasswordResetTokens();
-        // $reset_password->email = $request->email;
-        // $reset_password->token = mt_rand(100000 , 999999);
-        // $reset_password->created_at = now();
-        // $
-        // $reset_password->save();
 
         // mail
         Mail::to($request->email)->send(new ResetPasswordRequested($reset_password->token));

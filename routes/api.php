@@ -8,6 +8,8 @@ use App\Http\Controllers\Auth\UserEmailVerificationController;
 use App\Http\Controllers\Auth\UserRegisterController;
 use App\Http\Controllers\Auth\UserLoginController;
 use App\Http\Controllers\Auth\UserResetPassword;
+use App\Http\Controllers\UserCategoryController;
+use App\Http\Controllers\UserPostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,5 +41,19 @@ Route::post('/reset-password/email',[UserResetPassword::class,'sendResetPassword
 Route::middleware(['auth:sanctum'])->group(function () {
     // logoutc
     Route::post('logout',[UserLoginController::class,'logout']);
+
+    // post routes
+    Route::get('/posts',[UserPostController::class,'index']);
+    Route::get('/posts/{id}',[UserPostController::class,'show']);
+    Route::post('/posts',[UserPostController::class,'store']);
+    Route::put('/posts/{id}',[UserPostController::class,'update']);
+    Route::delete('/posts/{id}',[UserPostController::class,'destroy']);
+
+    // category routes
+    Route::get('/categories',[UserCategoryController::class,'index']);
+    Route::get('/categories/{id}',[UserCategoryController::class,'show']);
+    Route::post('/categories',[UserCategoryController::class,'store']);
+    Route::put('/categories/{id}',[UserCategoryController::class,'update']);
+    Route::delete('/categories/{id}',[UserCategoryController::class,'destroy']);
 });
 
