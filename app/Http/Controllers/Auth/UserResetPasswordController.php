@@ -7,11 +7,12 @@ use App\Mail\ResetPasswordRequested;
 use App\Models\ApiPasswordResetTokens;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules\Password;
 
-class UserResetPassword extends Controller
+class UserResetPasswordController extends Controller
 {
     public function resetPassword(Request $request)
     {
@@ -32,11 +33,15 @@ class UserResetPassword extends Controller
         $user = User::where('email',$request->email)->first();
         $token = ApiPasswordResetTokens::where('email',$request->email)->first();
 
-        if (! $user || ! $token)
+        if (! $user || ! $token || $token->token != $request->otp)
         {
             return APIResponse::json('wrong otp',true);
         }
 
+        // logout all access
+        $user->tokens()->delete();
+
+        // store new password
         $user->password = Hash::make($request->new_password);
         $user->save();
 
