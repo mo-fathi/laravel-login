@@ -6,23 +6,29 @@
 
 2. Open a terminal or command prompt and navigate to the directory where you want to create your Laravel application.
 
-3. Run the following command to install Laravel using Composer:
+3. Run the following command to clone Laravel project using GIT:
 
    ```bash
-   composer create-project --prefer-dist laravel/laravel:^10.0 your-app-name
+   git clone https://github.com/mo-fathi/laravel-login.git
    ```
 
-   Replace "your-app-name" with the desired name for your application.
-
-4. Once the installation is complete, navigate to the application directory:
+4. Once the cloning is complete, navigate to the application directory:
 
    ```bash
-   cd your-app-name
+   cd laravel-login
+   ```
+**Step 2: Install packages**
+1. Make sure you have installed composer.
+
+2. In the root directory of the Laravel application, you'll find a file named `.env.example`. Make a copy of this file and rename it to `.env`:
+
+   ```bash
+   composer install
    ```
 
-**Step 2: Configure Environment Variables**
+**Step 3: Configure Environment Variables**
 
-1. In the root directory of your Laravel application, you'll find a file named `.env.example`. Make a copy of this file and rename it to `.env`:
+1. In the root directory of the Laravel application, you'll find a file named `.env.example`. Make a copy of this file and rename it to `.env`:
 
    ```bash
    cp .env.example .env
@@ -66,7 +72,7 @@
 
    You can use other cache drivers like `redis` or `memcached` if desired.
 
-**Step 3: Generate Application Key**
+**Step 4: Generate Application Key**
 
 1. Run the following command to generate a unique application key:
 
@@ -76,7 +82,7 @@
 
    This key is used to secure user sessions and other encrypted data.
 
-**Step 4: Run the Application**
+**Step 5: Run the Application**
 
 1. Start the development server by running the following command:
 
@@ -87,7 +93,3 @@
    This will start the development server at `http://localhost:8000`.
 
 2. Open your web browser and navigate to `http://localhost:8000` to see your Laravel application running.
-
-That's it! You have successfully set up and configured a Laravel 10 application with PHP 8.1 in your development environment. You can now start building your application using Laravel's powerful features.
-
-Please note that this document assumes you have PHP 8.1 and Composer installed on your development machine. If you don't have them installed, please refer to the official documentation for PHP (https://www.php.net/manual/en/install.php) and Composer (https://getcomposer.org/doc/00-intro.md) to install them before proceeding.
