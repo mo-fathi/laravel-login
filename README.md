@@ -1,5 +1,3 @@
-Sure! Here's a document outlining the steps to run a Laravel 10 application with PHP 8.1 in a development environment, including email, database, and cache configuration in the .env file.
-
 **Setting up Laravel 10 Application with PHP 8.1 in Development Environment**
 
 **Step 1: Install Laravel**
