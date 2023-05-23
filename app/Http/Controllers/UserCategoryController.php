@@ -36,12 +36,12 @@ class UserCategoryController extends Controller
 
             $category_collection =  CategoryCollection::collection($category);
 
-            return APIResponse::json($data = $category_collection);
+            return APIResponse::json(data: $category_collection);
         }
         catch(BadMethodCallException $exception)
         {
             $category_resource =  new CategoryResource($category);
-            return APIResponse::json($data = $category_resource);
+            return APIResponse::json(data: $category_resource);
         }
 
     }
@@ -76,7 +76,7 @@ class UserCategoryController extends Controller
     {
         $category = Category::findOrFail($id);
         $category_resource = new CategoryResource($category);
-        return APIResponse::json($data=$category_resource);
+        return APIResponse::json(data: $category_resource);
     }
 
     /**
@@ -110,7 +110,7 @@ class UserCategoryController extends Controller
 
         $category = Category::findOrFail($id);
         $category->delete();
-        return APIResponse::json($message = 'The post deleted successfuly',$data=$category,$status=204);
+        return APIResponse::json(message: 'The post deleted successfuly',data: $category,code: 204);
 
     }
 }

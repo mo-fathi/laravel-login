@@ -36,12 +36,12 @@ class UserPostController extends Controller
 
         try{
             $post_collection =  PostCollection::collection($posts);
-            return APIResponse::json($data = $post_collection);
+            return APIResponse::json(data: $post_collection);
         }
         catch(BadMethodCallException $exception)
         {
             $post_resource =  new PostCollection($posts);
-            return APIResponse::json($data = $post_resource);
+            return APIResponse::json(data: $post_resource);
         }
     }
 
@@ -78,7 +78,7 @@ class UserPostController extends Controller
     {
         $post = Post::findOrFail($id);
         $post_resource = new PostResource($post);
-        return APIResponse::json($data=$post_resource);
+        return APIResponse::json(data:$post_resource);
     }
 
     /**
@@ -101,13 +101,13 @@ class UserPostController extends Controller
         ]);
         if(! $updated_post)
         {
-            return APIResponse::json($message='something is wrong',$error=true);
+            return APIResponse::json(message: 'something is wrong',errors: true);
         }
 
         $post->refresh();
         $updated_post_resorce = new PostResource($post);
 
-        return APIResponse::json($message='The post updated susccessfuly',$data=$updated_post_resorce);
+        return APIResponse::json(message:'The post updated susccessfuly',data: $updated_post_resorce);
 
     }
 
@@ -118,6 +118,6 @@ class UserPostController extends Controller
     {
         $post = Post::findOrFail($id);
         $post->delete();
-        return APIResponse::json($message = 'The post deleted successfuly',$data=$post,$status=204);
+        return APIResponse::json(message: 'The post deleted successfuly',data: $post,code: 204);
     }
 }
