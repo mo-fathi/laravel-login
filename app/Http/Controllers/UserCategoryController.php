@@ -109,6 +109,11 @@ class UserCategoryController extends Controller
     {
 
         $category = Category::findOrFail($id);
+        $related_posts = $category->posts();
+        if($related_posts)
+        {
+            return APIResponse::json(message: 'Can not delete categories. Some posts refers to it',code: 409);
+        }
         $category->delete();
         return APIResponse::json(message: 'The post deleted successfuly',data: $category,code: 202);
 
