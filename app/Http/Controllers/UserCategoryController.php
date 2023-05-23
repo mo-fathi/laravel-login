@@ -110,7 +110,7 @@ class UserCategoryController extends Controller
 
         $category = Category::findOrFail($id);
         $category->delete();
-        return APIResponse::json(message: 'The post deleted successfuly',data: $category,code: 204);
+        return APIResponse::json(message: 'The post deleted successfuly',data: $category,code: 202);
 
     }
 }

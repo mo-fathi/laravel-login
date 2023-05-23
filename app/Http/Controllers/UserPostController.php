@@ -118,6 +118,6 @@ class UserPostController extends Controller
     {
         $post = Post::findOrFail($id);
         $post->delete();
-        return APIResponse::json(message: 'The post deleted successfuly',data: $post,code: 204);
+        return APIResponse::json(message: 'The post deleted successfuly',data: $post,code: 202);
     }
 }
