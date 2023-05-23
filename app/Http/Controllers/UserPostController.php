@@ -94,15 +94,20 @@ class UserPostController extends Controller
 
         $post = Post::findOrFail($id);
 
-        $updated_post =$post->update([
+        $updated_post = $post->update([
             'title' => $request->title,
             'context' => $request->context,
             'category_id' => $request->category_id
         ]);
+        if(! $updated_post)
+        {
+            return APIResponse::json($message='something is wrong',$error=true);
+        }
 
-        $updated_post_resorce = new PostResource($updated_post);
+        $post->refresh();
+        $updated_post_resorce = new PostResource($post);
 
-        return APIResponse::json('The post updated susccessfuly');
+        return APIResponse::json($message='The post updated susccessfuly',$data=$updated_post_resorce);
 
     }
 
